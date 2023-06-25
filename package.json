@@ -1,0 +1,32 @@
+{
+
+  "main": "build/pacfactory.js",
+
+  "scripts": {
+
+    "test": "node runPacApp TestMaster",
+
+    "start:build": "tsc -w",
+
+    "start:run": "nodemon build/pacfactory.js Mao -jsap ./resources/my2sec.jsap",
+
+    "start": "concurrently npm:start:*"
+
+  },
+
+  "devDependencies": {
+
+    "@types/node": "^20.3.1"
+
+  },
+
+  "dependencies": {
+
+    "@arces-wot/sepa-js": "^0.13.2",
+
+    "greglogs": "^1.0.0"
+
+  }
+
+}
+
