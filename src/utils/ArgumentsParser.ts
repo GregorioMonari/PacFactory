@@ -1,4 +1,4 @@
-import {GregLogs} from "./GregLogs"
+var log = require("greglogs").default
 
 export interface PacFactoryConfig {
     "appName":string | null;
@@ -7,12 +7,12 @@ export interface PacFactoryConfig {
 }
 
 export class ArgumentsParser {
-    private log = new GregLogs()
+    //private log = new GregLogs("./resources/logger_config.json")
     constructor(){}
 
     public parseArguments(args: string[]): PacFactoryConfig{
         if(args.length==0){
-            this.log.warning("No arguments received, returning empy object")
+            log.warning("No arguments received, returning empy object")
             let config: PacFactoryConfig = {
                 "appName": null,
                 "jsapPath": null,
@@ -22,7 +22,7 @@ export class ArgumentsParser {
         }
 
         
-        this.log.debug("Arguments:",args)
+        log.debug("Arguments:",args)
         const app=args[0]
         let config: PacFactoryConfig = {
             "appName": app,

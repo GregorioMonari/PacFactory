@@ -1,7 +1,8 @@
 import { CachedConsumer } from "./CachedConsumer"
 import { BindingsResults, ParsedBinding } from "../sepa/BindingsResults";
+var log = require("greglogs").default
 
-class SynchronousConsumer extends CachedConsumer{
+export class SynchronousConsumer extends CachedConsumer{
   private flagname;
   private flagBindings;
 
@@ -37,7 +38,7 @@ class SynchronousConsumer extends CachedConsumer{
 
   onSyncFlag(res: BindingsResults):void{
     for(const flagBinding of res.getBindings()){
-      this.log.debug("Added results:",flagBinding);
+      log.debug("Added results:",flagBinding);
       this.getEmitter().emit("newsyncflag",flagBinding)
       this.RESET_SYNCHRONIZATION_FLAG({flag:flagBinding.flag})
     }
@@ -49,7 +50,7 @@ class SynchronousConsumer extends CachedConsumer{
     }
   }
   onFlagRemovedResults(res: BindingsResults):void{
-    this.log.debug("Removed results:",res.getBindings());
+    log.debug("Removed results:",res.getBindings());
     this.getEmitter().emit("flagremovedResults",res)
   }
   onFlagError(err:any){
@@ -61,4 +62,4 @@ class SynchronousConsumer extends CachedConsumer{
 
 }
 
-module.exports = SynchronousConsumer;
+//module.exports = SynchronousConsumer;

@@ -1,7 +1,6 @@
 //import {JsapApi, SEPA} from '@arces-wot/sepa-js'//jsap api
 const JsapApi =  require('@arces-wot/sepa-js').Jsap;
-import {GregLogs} from "../utils/GregLogs"
-import * as fs from 'fs';
+var log = require("greglogs").default
 import { ARBindingsResults, SepaResponse } from "./sepa/ARBindingsResults";
 
 /**
@@ -14,7 +13,7 @@ import { ARBindingsResults, SepaResponse } from "./sepa/ARBindingsResults";
  */
 export class PacModule extends JsapApi {
   private _ACTIVE_SUBSCRIPTIONS_ARR=new Map();
-  public log= new GregLogs();
+  //public log= new GregLogs("./resources/logger_config.json");
 
   constructor(jsap: object) {
     super(jsap);
@@ -24,7 +23,7 @@ export class PacModule extends JsapApi {
     for(var k of this.activeSubscriptions.keys()){
       var currSub:any=this.activeSubscriptions.get(k)
       currSub.instance.unsubscribe()
-      this.log.info("Unsubscribed from '"+currSub.name+"', alias: "+currSub.instance._alias+", spuid: "+currSub.instance._stream.spuid)
+      log.info("Unsubscribed from '"+currSub.name+"', alias: "+currSub.instance._alias+", spuid: "+currSub.instance._stream.spuid)
       this.activeSubscriptions.delete(k)
     }
   }
@@ -64,10 +63,10 @@ export class PacModule extends JsapApi {
   async startSubscription(queryname: string,data: object,added: any,first: any,removed: any,error: any){
     var firstResults=true;
     var sub = this[queryname](data);
-    this.log.info(`Subscribed to '${queryname}', alias: ${sub._alias}`)
+    log.info(`Subscribed to '${queryname}', alias: ${sub._alias}`)
     sub.on("notification",async (notification:SepaResponse)=>{
-      this.log.debug("** Notification from \'"+queryname+"\' subscription received, alias: "+sub._alias+", spuid: "+sub._stream.spuid)
-      this.log.trace(notification)
+      log.debug("** Notification from \'"+queryname+"\' subscription received, alias: "+sub._alias+", spuid: "+sub._stream.spuid)
+      log.trace(notification)
       let arBindings=new ARBindingsResults(notification)
       if(!firstResults){
         if(!arBindings.removedResults.isEmpty()) await this[removed](arBindings.removedResults)
@@ -105,13 +104,13 @@ export class PacModule extends JsapApi {
       this._ACTIVE_SUBSCRIPTIONS_ARR[i].unsubscribe()
     }
     this._ACTIVE_SUBSCRIPTIONS_ARR=[]
-    this.log.info("CLOSED ALL SUBSCRIPTIONS")
+    log.info("CLOSED ALL SUBSCRIPTIONS")
   }
 
   //=============SEPA CLIENT=============
   async testSepaSource(){
     var queryRes=await this.rawQuery('select * where {graph <http://www.vaimee.it/testing/'+this.testingGraphName+'> {?s ?p ?o} }');
-    this.log.info("Connected to Sepa")
+    log.info("Connected to Sepa")
   }
 
 
@@ -125,7 +124,7 @@ export class PacModule extends JsapApi {
         //If removed results are present, call remove first
         if(this._isRemovedResults(not)){
           const bindings=this.extractRemovedResultsBindings(not);
-          this.log.trace(`### ${queryname}: removed results received (${bindings.length}) ###`)
+          log.trace(`### ${queryname}: removed results received (${bindings.length}) ###`)
           for(var i=0;i<bindings.length;i++){
             try{
               await this[removed](bindings[i]);
@@ -134,7 +133,7 @@ export class PacModule extends JsapApi {
         }
         //console.log(not)
         const bindings=this.extractAddedResultsBindings(not);
-        this.log.trace(`### ${queryname}: added results received (${bindings.length}) ###`)
+        log.trace(`### ${queryname}: added results received (${bindings.length}) ###`)
         for(var i=0;i<bindings.length;i++){
           await this[added](bindings[i]);
         }
@@ -143,7 +142,7 @@ export class PacModule extends JsapApi {
         firstResults=false;
         var bindings=this.extractAddedResultsBindings(not);
         //this.saveUpdateTemplate(JSON.stringify(not))
-        this.log.trace(`### ${queryname}: first results received (${bindings.length}) ###`)
+        log.trace(`### ${queryname}: first results received (${bindings.length}) ###`)
         for(var i=0;i<bindings.length;i++){
           try{
             this[first](bindings[i]);
@@ -155,7 +154,7 @@ export class PacModule extends JsapApi {
       this[error](err);
     });
     this._SUBARR.push(sub)
-    this.log.info("Sub and Notify Router initialized ("+queryname+")")
+    log.info("Sub and Notify Router initialized ("+queryname+")")
   }
 
   newSubRouter(queryname,data,callback,ignore_first_results){
@@ -169,26 +168,26 @@ export class PacModule extends JsapApi {
       if(!firstResults){
         if(!this._isRemovedResults(not)){
           var bindings=this.extractAddedResultsBindings(not);
-          this.log.trace(`### ${queryname}: added results received (${bindings.length}) ###`)
+          log.trace(`### ${queryname}: added results received (${bindings.length}) ###`)
           for(var i=0;i<bindings.length;i++){
             this[callback](bindings[i]);
           }
         }else{
-          this.log.warning("Ignored removed results")
+          log.warning("Ignored removed results")
         }
       }else{
         firstResults=false;
         
         var bindings=this.extractAddedResultsBindings(not);
         //this.saveUpdateTemplate(JSON.stringify(not))
-        this.log.trace(`### ${queryname}: first results received (${bindings.length}) ###`)
+        log.trace(`### ${queryname}: first results received (${bindings.length}) ###`)
         for(var i=0;i<bindings.length;i++){
           this[callback](bindings[i]);
         }
       }
     });
     this._SUBARR.push(sub)
-    this.log.info("Sub Router initialized ("+queryname+")")
+    log.info("Sub Router initialized ("+queryname+")")
   }
 
 
@@ -199,27 +198,27 @@ export class PacModule extends JsapApi {
     this.app.get(path, jsonParser, (req, res) => {
       this[callback]({req:req,res:res})
     });
-    this.log.info("GET Router initialized ("+path+")")
+    log.info("GET Router initialized ("+path+")")
   }
 
   newPostRouter(path,callback){
     this.app.post(path, jsonParser, (req, res) => {
       this[callback]({req:req,res:res})
     });
-    this.log.info("POST Router initialized ("+path+")")
+    log.info("POST Router initialized ("+path+")")
   }
 
   newDeleteRouter(path,callback){
     this.app.delete(path, jsonParser, (req, res) => {
       this[callback]({req:req,res:res})
     });
-    this.log.info("DELETE Router initialized ("+path+")")
+    log.info("DELETE Router initialized ("+path+")")
   }
 
   //listen to requests es.1357
   listen(node_port){
     this.app.listen(node_port, () => {
-      this.log.info('Listening from port: '+node_port);
+      log.info('Listening from port: '+node_port);
     });
   }
 
@@ -269,7 +268,7 @@ export class PacModule extends JsapApi {
 
   debugTableSlice(data,limit){
     console.warning("DEPRECATED,WILL SOON BE REMOVED")
-    this.log.debug(`Showing ${limit} of ${data.length} rows:`)
+    log.debug(`Showing ${limit} of ${data.length} rows:`)
     console.table(data.slice(0,limit))
   }
   extractAddedResultsBindings(subRes){
@@ -331,11 +330,13 @@ export class PacModule extends JsapApi {
       var sub =this[queryname](data);
       sub.on("notification",not=>{
         sub.unsubscribe();
-        //this.log.debug("# Notification Received! (id: \""+queryname+"\") #");
+        //log.debug("# Notification Received! (id: \""+queryname+"\") #");
         var bindings=this.extractAddedResultsBindings(not);
         resolve(bindings);
       });
     })
   }
   */
-}//---------------------------------------------------------END OF PAC FACTORY-----------------------------------------------------
+}//---------------------------------------------------------END OF PAC FACTORY----------------------------------------------------
+
+//module.exports=PacModule

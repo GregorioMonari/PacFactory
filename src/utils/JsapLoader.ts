@@ -1,9 +1,9 @@
 import * as fs from 'fs';
-import {GregLogs} from "./GregLogs"
+var log = require("greglogs").default
 
 export class JsapLoader{
 
-    private log = new GregLogs()
+    //private log = new GregLogs("./resources/logger_config.json")
     constructor(){}
 
     private readFileAsJson(fileName: string){
@@ -18,7 +18,7 @@ export class JsapLoader{
     private overrideJsapWithEnv(tempjsap:any){
         if(process.env.HOST_NAME!=undefined){
             var host_name=process.env.HOST_NAME;
-            this.log.trace("LOADING ENV HOST_NAME: "+host_name)
+            log.trace("LOADING ENV HOST_NAME: "+host_name)
             tempjsap.host=host_name;
         }else{
             //console.log("default hostname")	
@@ -26,7 +26,7 @@ export class JsapLoader{
         
         if(process.env.HTTP_PORT!=undefined){
             var http_port=process.env.HTTP_PORT;
-            this.log.trace("LOADING ENV HOST_NAME: "+http_port)
+            log.trace("LOADING ENV HOST_NAME: "+http_port)
             tempjsap.sparql11protocol.port=http_port;	
         }else{
             //console.log("default hostname")	
@@ -35,7 +35,7 @@ export class JsapLoader{
         
         if(process.env.WS_PORT!=undefined){
             var ws_port=process.env.WS_PORT;
-            this.log.trace("LOADING ENV HOST_NAME: "+ws_port)
+            log.trace("LOADING ENV HOST_NAME: "+ws_port)
             tempjsap.sparql11seprotocol.availableProtocols.ws.port=ws_port;
         }else{
             //console.log("default hostname")	
@@ -48,7 +48,7 @@ export class JsapLoader{
     public getJsap(pathOverride: string|null){
         if(!pathOverride){
             //no override
-            this.log.warning("No jsap argument found, using default jsap")
+            log.warning("No jsap argument found, using default jsap")
             var jsap=this.getDefaultJsap()
             return this.overrideJsapWithEnv(jsap)
         }else{

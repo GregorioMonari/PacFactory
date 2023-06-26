@@ -9,11 +9,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const GregLogs_1 = require("./utils/GregLogs");
+var log = require("greglogs").default;
 const CachedConsumer_1 = require("./core/Pattern/CachedConsumer");
 const ArgumentsParser_1 = require("./utils/ArgumentsParser");
 const JsapLoader_1 = require("./utils/JsapLoader");
-const log = new GregLogs_1.GregLogs();
+//const log= new GregLogs("./resources/logger_config.json")
 const _argumentsParser = new ArgumentsParser_1.ArgumentsParser();
 const _jsapLoader = new JsapLoader_1.JsapLoader();
 main();

@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.PacModule = void 0;
 //import {JsapApi, SEPA} from '@arces-wot/sepa-js'//jsap api
 const JsapApi = require('@arces-wot/sepa-js').Jsap;
-const GregLogs_1 = require("../utils/GregLogs");
+var log = require("greglogs").default;
 const ARBindingsResults_1 = require("./sepa/ARBindingsResults");
 /**
  * # PAC MODULE
@@ -23,16 +23,16 @@ const ARBindingsResults_1 = require("./sepa/ARBindingsResults");
  * - this.extendedConfig
  */
 class PacModule extends JsapApi {
+    //public log= new GregLogs("./resources/logger_config.json");
     constructor(jsap) {
         super(jsap);
         this._ACTIVE_SUBSCRIPTIONS_ARR = new Map();
-        this.log = new GregLogs_1.GregLogs();
     }
     stop() {
         for (var k of this.activeSubscriptions.keys()) {
             var currSub = this.activeSubscriptions.get(k);
             currSub.instance.unsubscribe();
-            this.log.info("Unsubscribed from '" + currSub.name + "', alias: " + currSub.instance._alias + ", spuid: " + currSub.instance._stream.spuid);
+            log.info("Unsubscribed from '" + currSub.name + "', alias: " + currSub.instance._alias + ", spuid: " + currSub.instance._stream.spuid);
             this.activeSubscriptions.delete(k);
         }
     }
@@ -65,10 +65,10 @@ class PacModule extends JsapApi {
         return __awaiter(this, void 0, void 0, function* () {
             var firstResults = true;
             var sub = this[queryname](data);
-            this.log.info(`Subscribed to '${queryname}', alias: ${sub._alias}`);
+            log.info(`Subscribed to '${queryname}', alias: ${sub._alias}`);
             sub.on("notification", (notification) => __awaiter(this, void 0, void 0, function* () {
-                this.log.debug("** Notification from \'" + queryname + "\' subscription received, alias: " + sub._alias + ", spuid: " + sub._stream.spuid);
-                this.log.trace(notification);
+                log.debug("** Notification from \'" + queryname + "\' subscription received, alias: " + sub._alias + ", spuid: " + sub._stream.spuid);
+                log.trace(notification);
                 let arBindings = new ARBindingsResults_1.ARBindingsResults(notification);
                 if (!firstResults) {
                     if (!arBindings.removedResults.isEmpty())
@@ -90,5 +90,6 @@ class PacModule extends JsapApi {
             });
         });
     }
-} //---------------------------------------------------------END OF PAC FACTORY-----------------------------------------------------
+} //---------------------------------------------------------END OF PAC FACTORY----------------------------------------------------
 exports.PacModule = PacModule;
+//module.exports=PacModule

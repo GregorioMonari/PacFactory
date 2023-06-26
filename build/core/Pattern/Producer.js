@@ -9,12 +9,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Producer = void 0;
+var log = require("greglogs").default;
 const PacModule_1 = require("../PacModule");
-/*###########################################
-|| NAME: PRODUCER
-|| AUTHOR: Gregorio Monari
-|| DATE: 18/1/2023
-############################################*/
 class Producer extends PacModule_1.PacModule {
     constructor(jsap, updatename) {
         super(jsap);
@@ -43,13 +40,13 @@ class Producer extends PacModule_1.PacModule {
                 console.log(e);
             }
             if (failed) {
-                this.log.error("Bindings mismatch in update: " + this.updatename + ", showing logs:");
+                log.error("Bindings mismatch in update: " + this.updatename + ", showing logs:");
                 console.log("bindings: " + Object.keys(bindings).join(" - "));
                 console.log("forcedBindings: " + Object.keys(forcedBindings).join(" - "));
                 throw new Error(`Bindings mismatch`);
             }
             else {
-                this.log.trace("Update bindings ok");
+                log.trace("Update bindings ok");
             }
             var res = yield this[this.updatename](bindings);
             return res;
@@ -59,4 +56,5 @@ class Producer extends PacModule_1.PacModule {
         throw new Error(`Error from ${this.getUpdateName} consumer: ${err}`);
     }
 }
-module.exports = Producer;
+exports.Producer = Producer;
+//module.exports = Producer;

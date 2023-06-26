@@ -1,6 +1,7 @@
 import { PacModule} from "../PacModule"
 import { BindingsResults , ParsedBinding } from "../sepa/BindingsResults";
 const EventEmitter = require("events").EventEmitter
+var log = require("greglogs").default
 /*###########################################
 || NAME: CONSUMER
 || AUTHOR: Gregorio Monari
@@ -62,15 +63,15 @@ export class Consumer extends PacModule{
 
 
   onFirstResults(res: BindingsResults):void{
-    this.log.debug("First results:",res.getBindings());
+    log.debug("First results:",res.getBindings());
     this.getEmitter().emit("firstResults",res)
   }
   onAddedResults(res: BindingsResults):void{
-    this.log.debug("Added results:",res.getBindings());
+    log.debug("Added results:",res.getBindings());
     this.getEmitter().emit("addedResults",res)
   }
   onRemovedResults(res: BindingsResults):void{
-    this.log.debug("Removed results:",res.getBindings());
+    log.debug("Removed results:",res.getBindings());
     this.getEmitter().emit("removedResults",res)
   }
   onError(err:any){
@@ -80,3 +81,6 @@ export class Consumer extends PacModule{
 
 
 }
+
+
+//module.exports=Consumer;

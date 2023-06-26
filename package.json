@@ -1,32 +1,32 @@
 {
-
-  "main": "build/pacfactory.js",
-
+  "main": "index.js",
   "scripts": {
-
     "test": "node runPacApp TestMaster",
-
     "start:build": "tsc -w",
-
     "start:run": "nodemon build/pacfactory.js Mao -jsap ./resources/my2sec.jsap",
-
     "start": "concurrently npm:start:*"
-
   },
-
   "devDependencies": {
-
     "@types/node": "^20.3.1"
-
   },
-
   "dependencies": {
-
     "@arces-wot/sepa-js": "^0.13.2",
-
-    "greglogs": "^1.0.0"
-
-  }
-
+    "greglogs": "^1.0.1"
+  },
+  "name": "pacfactory",
+  "description": "A collection of semantic clients implementing the PAC architecture",
+  "version": "1.0.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GregorioMonari/PacFactory.git"
+  },
+  "keywords": [
+    "pac"
+  ],
+  "author": "Gregorio Monari",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/GregorioMonari/PacFactory/issues"
+  },
+  "homepage": "https://github.com/GregorioMonari/PacFactory#readme"
 }
-

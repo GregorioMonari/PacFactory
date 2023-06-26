@@ -1,14 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ArgumentsParser = void 0;
-const GregLogs_1 = require("./GregLogs");
+var log = require("greglogs").default;
 class ArgumentsParser {
-    constructor() {
-        this.log = new GregLogs_1.GregLogs();
-    }
+    //private log = new GregLogs("./resources/logger_config.json")
+    constructor() { }
     parseArguments(args) {
         if (args.length == 0) {
-            this.log.warning("No arguments received, returning empy object");
+            log.warning("No arguments received, returning empy object");
             let config = {
                 "appName": null,
                 "jsapPath": null,
@@ -16,7 +15,7 @@ class ArgumentsParser {
             };
             return config;
         }
-        this.log.debug("Arguments:", args);
+        log.debug("Arguments:", args);
         const app = args[0];
         let config = {
             "appName": app,

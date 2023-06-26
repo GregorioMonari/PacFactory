@@ -1,15 +1,11 @@
+var log = require("greglogs").default
+import { PacModule } from "../PacModule";
+
 export interface UpdateBindings{
   [key: string]: string | number | string[] | number[];
 }
 
-
-import { PacModule } from "../PacModule";
-/*###########################################
-|| NAME: PRODUCER
-|| AUTHOR: Gregorio Monari
-|| DATE: 18/1/2023
-############################################*/
-class Producer extends PacModule{
+export class Producer extends PacModule{
   private updatename:string;
   constructor(jsap:any,updatename:string){
     super(jsap);
@@ -37,12 +33,12 @@ class Producer extends PacModule{
     }catch(e){console.log(e)}
 
     if(failed){
-        this.log.error("Bindings mismatch in update: "+this.updatename+", showing logs:")
+        log.error("Bindings mismatch in update: "+this.updatename+", showing logs:")
         console.log("bindings: "+Object.keys(bindings).join(" - "))
         console.log("forcedBindings: "+Object.keys(forcedBindings).join(" - "))
         throw new Error(`Bindings mismatch`)
     }else{
-      this.log.trace("Update bindings ok")
+      log.trace("Update bindings ok")
     }
 
     var res=await this[this.updatename](bindings)
@@ -56,4 +52,4 @@ class Producer extends PacModule{
 
 }
 
-module.exports = Producer;
+//module.exports = Producer;

@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Consumer = void 0;
 const PacModule_1 = require("../PacModule");
 const EventEmitter = require("events").EventEmitter;
+var log = require("greglogs").default;
 /*###########################################
 || NAME: CONSUMER
 || AUTHOR: Gregorio Monari
@@ -63,15 +64,15 @@ class Consumer extends PacModule_1.PacModule {
         });
     }
     onFirstResults(res) {
-        this.log.debug("First results:", res.getBindings());
+        log.debug("First results:", res.getBindings());
         this.getEmitter().emit("firstResults", res);
     }
     onAddedResults(res) {
-        this.log.debug("Added results:", res.getBindings());
+        log.debug("Added results:", res.getBindings());
         this.getEmitter().emit("addedResults", res);
     }
     onRemovedResults(res) {
-        this.log.debug("Removed results:", res.getBindings());
+        log.debug("Removed results:", res.getBindings());
         this.getEmitter().emit("removedResults", res);
     }
     onError(err) {
@@ -79,3 +80,4 @@ class Consumer extends PacModule_1.PacModule {
     }
 }
 exports.Consumer = Consumer;
+//module.exports=Consumer;

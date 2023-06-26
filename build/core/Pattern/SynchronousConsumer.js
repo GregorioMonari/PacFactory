@@ -9,7 +9,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.SynchronousConsumer = void 0;
 const CachedConsumer_1 = require("./CachedConsumer");
+var log = require("greglogs").default;
 class SynchronousConsumer extends CachedConsumer_1.CachedConsumer {
     constructor(jsap_file, queryname, sub_bindings, flag_queryname, flag_bindings, ignore_first_results) {
         super(jsap_file, queryname, sub_bindings, ignore_first_results);
@@ -31,7 +33,7 @@ class SynchronousConsumer extends CachedConsumer_1.CachedConsumer {
     }
     onSyncFlag(res) {
         for (const flagBinding of res.getBindings()) {
-            this.log.debug("Added results:", flagBinding);
+            log.debug("Added results:", flagBinding);
             this.getEmitter().emit("newsyncflag", flagBinding);
             this.RESET_SYNCHRONIZATION_FLAG({ flag: flagBinding.flag });
         }
@@ -42,11 +44,12 @@ class SynchronousConsumer extends CachedConsumer_1.CachedConsumer {
         }
     }
     onFlagRemovedResults(res) {
-        this.log.debug("Removed results:", res.getBindings());
+        log.debug("Removed results:", res.getBindings());
         this.getEmitter().emit("flagremovedResults", res);
     }
     onFlagError(err) {
         throw new Error(`Error from ${this.getFlagQueryName} consumer: ${err}`);
     }
 }
-module.exports = SynchronousConsumer;
+exports.SynchronousConsumer = SynchronousConsumer;
+//module.exports = SynchronousConsumer;

@@ -1,5 +1,6 @@
 import { BindingsResults } from "../sepa/BindingsResults";
 import { Consumer } from "./Consumer";
+var log = require("greglogs").default
 
 export class CachedConsumer extends Consumer{
     private ignore_first_results:boolean;
@@ -18,23 +19,23 @@ export class CachedConsumer extends Consumer{
     //!Emit added results after being added to cache
     onFirstResults(res: BindingsResults):void{
         if(!this.ignore_first_results){
-            this.log.trace("First results:",res);
+            log.trace("First results:",res);
             this.add_bindings_to_cache(res);
             this.getEmitter().emit("firstResults",res)
-            this.log.debug("Cache size: "+this.cache.size)
+            log.debug("Cache size: "+this.cache.size)
         }
     }
     onRemovedResults(res: BindingsResults):void{
-        this.log.trace("Removed results:",res);
+        log.trace("Removed results:",res);
         this.remove_bindings_from_cache(res);
         this.getEmitter().emit("removedResults",res)
-        this.log.debug("Cache size: "+this.cache.size)
+        log.debug("Cache size: "+this.cache.size)
     }
     onAddedResults(res: BindingsResults):void{
-        this.log.trace("Added results:",res);
+        log.trace("Added results:",res);
         this.add_bindings_to_cache(res);
         this.getEmitter().emit("addedResults",res)
-        this.log.debug("Cache size: "+this.cache.size)
+        log.debug("Cache size: "+this.cache.size)
     }
 
     public get cache(): Map<string|number,any>{
@@ -51,25 +52,28 @@ export class CachedConsumer extends Consumer{
      */
     add_bindings_to_cache(res: BindingsResults){
         for(let binding of res.getBindings()){
-            if(!binding.hasOwnProperty("s")){this.log.trace("Skipping binding, no usergraph key detected"); continue}
+            if(!binding.hasOwnProperty("s")){log.trace("Skipping binding, no usergraph key detected"); continue}
             if(this.cache.has(binding.s)){
-                this.log.trace("Skipping binding, key already exists");
+                log.trace("Skipping binding, key already exists");
             }else{
                 this.cache.set(binding.s,binding)
             }
-            this.log.trace(this.cache)
+            log.trace(this.cache)
         }
     }
     remove_bindings_from_cache(res: BindingsResults){
         for(let binding of res.getBindings()){
-            if(!binding.hasOwnProperty("s")){this.log.trace("Skipping binding, no usergraph key detected"); continue}
+            if(!binding.hasOwnProperty("s")){log.trace("Skipping binding, no usergraph key detected"); continue}
             if(!this.cache.has(binding.s)){
-                this.log.trace("Skipping binding, key does not exist");
+                log.trace("Skipping binding, key does not exist");
             }else{
                 this.cache.delete(binding.s)
             }
-            this.log.trace(this.cache)
+            log.trace(this.cache)
         }
     }
 
 }
+
+
+//module.exports=CachedConsumer
