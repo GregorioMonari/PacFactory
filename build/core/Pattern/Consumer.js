@@ -13,11 +13,56 @@ exports.Consumer = void 0;
 const PacModule_1 = require("../PacModule");
 const EventEmitter = require("events").EventEmitter;
 var log = require("greglogs").default;
-/*###########################################
-|| NAME: CONSUMER
-|| AUTHOR: Gregorio Monari
-|| DATE: 18/1/2023
-############################################*/
+/**
+ * ### Consumer
+ * Create a consumer:
+ * ```
+ * const queryName="ALL_USERNAMES";
+ * const bindings={};
+ * let consumer= new Consumer(jsap,queryName,bindings)
+ * ```
+ *
+ * A Consumer contains an event emitter that fires on: first,added and received results. The event emitter can be listened to react to a notification:
+ * ```
+ * consumer.getEmitter().on("firstResults",(not)=>{
+ *     console.log(not)
+ * })
+ * consumer.getEmitter().on("addedResults",(not)=>{
+ *     console.log(not)
+ * })
+ * consumer.getEmitter().on("removedResults",(not)=>{
+ *     console.log(not)
+ * })
+ * ```
+
+ * Alternatively, a new Class that extends the Consumer can be created to implement a custom consumer:
+ * ```
+ * class MyConsumer{
+ *     constructor(jsap){
+ *         super(jsap,"MY_QUERY_NAME")
+ *     }
+ *
+ *     //@Override
+ *     onFirstResults(not){
+ *         console.log(not)
+ *     }
+ *     //@Override
+ *     onAddedResults(not){
+ *         console.log(not)
+ *     }
+ *     //@Override
+ *     onRemovedResults(not){
+ *         console.log(not)
+ *     }
+ * }
+ * ```
+ *
+ *
+ * After declaring the event listeners, the consumer needs to subscribe to sepa to begin receiving notifications:
+ * ```
+ * consumer.subscribeToSepa()
+ * ```
+ */
 class Consumer extends PacModule_1.PacModule {
     constructor(jsap, queryname, sub_bindings) {
         super(jsap);
@@ -62,6 +107,22 @@ class Consumer extends PacModule_1.PacModule {
             res = this.extractResultsBindings(res);
             return res;
         });
+    }
+    extractResultsBindings(queryRes) {
+        var rawBindings = queryRes.results.bindings;
+        var bindings = [];
+        var rawCell = {};
+        var cell = {};
+        Object.keys(rawBindings).forEach(k => {
+            rawCell = rawBindings[k]; //extract single rawcell
+            Object.keys(rawCell).forEach(field => {
+                cell[field] = rawCell[field].value;
+            });
+            bindings[k] = cell; //assign cell to bindings array
+            cell = {};
+            rawCell = {};
+        });
+        return bindings;
     }
     onFirstResults(res) {
         log.debug("First results:", res.getBindings());

@@ -15,8 +15,9 @@ const JsapApi = require('@arces-wot/sepa-js').Jsap;
 var log = require("greglogs").default;
 const ARBindingsResults_1 = require("./sepa/ARBindingsResults");
 /**
- * # PAC MODULE
- * Generic class which implements helper functions for jsapApi
+ * ## PAC MODULE
+ * Generic class which implements helper functions for jsapApi.
+ * The constructor requires a Jsap file in parsed Json format.
  * ### Included modules
  * - this.api (SEPA api)
  * - this.bench (QueryBench)
@@ -28,6 +29,9 @@ class PacModule extends JsapApi {
         super(jsap);
         this._ACTIVE_SUBSCRIPTIONS_ARR = new Map();
     }
+    /**
+     * Unsubscribes the module from any active subscription, effectively stopping it.
+     */
     stop() {
         for (var k of this.activeSubscriptions.keys()) {
             var currSub = this.activeSubscriptions.get(k);
@@ -59,7 +63,11 @@ class PacModule extends JsapApi {
         return this._ACTIVE_SUBSCRIPTIONS_ARR;
     }
     /**
-     * Initializes a subscription.
+     * ## Subscribe to Sepa
+     * **Subscribes** the module to an active **Sepa Engine**. Stop the module by calling the 'stop()' method.
+     * The Sepa connection parameters must be provided by the jsap file in the module constructor
+     * In addition, the callbacks stringified names of the callbacks functions for added,
+     * removed and first results must be provided
      */
     startSubscription(queryname, data, added, first, removed, error) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -90,6 +98,5 @@ class PacModule extends JsapApi {
             });
         });
     }
-} //---------------------------------------------------------END OF PAC FACTORY----------------------------------------------------
+} //---------------------------------------------------------END OF PAC MODULE----------------------------------------------------
 exports.PacModule = PacModule;
-//module.exports=PacModule
