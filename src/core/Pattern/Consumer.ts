@@ -26,7 +26,7 @@ var log = require("greglogs").default
 
  * Alternatively, a new Class that extends the Consumer can be created to implement a custom consumer:
  * ```
- * class MyConsumer{
+ * class MyConsumer extends Consumer{
  *     constructor(jsap){
  *         super(jsap,"MY_QUERY_NAME")
  *     }

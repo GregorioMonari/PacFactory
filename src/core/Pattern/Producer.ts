@@ -5,6 +5,34 @@ export interface UpdateBindings{
   [key: string]: string | number | string[] | number[];
 }
 
+/**
+ * ### Producer
+ * Create a producer:
+ * `
+ * const updateName="ADD_USER";
+ * let producer= new Producer(jsap,updateName);
+ * `
+ * 
+ * Update Sepa with forced bindings:
+ * `
+ * producer.updateSepa({
+ *     usergraph: "http://vaimee.it/my2sec/defuser@vaimee.it",
+ *     username: "defuser"
+ * })
+ * `
+ * Alternatively, a new Class that extends the Producer can be created to implement a custom producer:
+ * `
+ * class MyProducer extends Producer{
+ *     constructor(jsap){
+ *         super(jsap,"MY_UPDATE_NAME")
+ *     }
+ *     //@Override
+ *     updateSepa(data){
+ *         ...
+ *     }
+ * }
+ * `
+ */
 export class Producer extends PacModule{
   private updatename:string;
   constructor(jsap:any,updatename:string){

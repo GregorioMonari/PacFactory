@@ -10,7 +10,7 @@ var log = require("greglogs").default
  * 
  * Define a SyncConsumer with custom flag and caching logic:
  * ```
- * class MySynchronousConsumer extends CachedConsumer{
+ * class MySynchronousConsumer extends SynchronousConsumer{
  *     constructor(jsap,ignore_first_results){
  *         let queryName="MY_QUERY_NAME";
  *         let queryBindings={};

@@ -38,7 +38,7 @@ producer.updateSepa({
 </pre>
 Alternatively, a new Class that extends the Producer can be created to implement a custom producer:
 <pre>
-class MyProducer{
+class MyProducer extends Producer{
     constructor(jsap){
         super(jsap,"MY_UPDATE_NAME")
     }
@@ -72,7 +72,7 @@ consumer.getEmitter().on("removedResults",(not)=>{
 
 Alternatively, a new Class that extends the Consumer can be created to implement a custom consumer:
 <pre>
-class MyConsumer{
+class MyConsumer extends Consumer{
     constructor(jsap){
         super(jsap,"MY_QUERY_NAME")
     }
@@ -153,7 +153,7 @@ The SyncFlag can be used to signal the end of a notification stream. Usually, th
 Being an extension of a cached consumer, it is necessary to implement a custom caching logic and specify the syncflag bindings.
 Define a SyncConsumer with custom flag and caching logic:
 <pre>
-class MySynchronousConsumer extends CachedConsumer{
+class MySynchronousConsumer extends SynchronousConsumer{
     constructor(jsap,ignore_first_results){
         let queryName="MY_QUERY_NAME";
         let queryBindings={};
