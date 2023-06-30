@@ -32,6 +32,9 @@ async function main(){
 async function startPacModule(jsap: object,config: PacFactoryConfig): Promise<void>{
     let pac= new CachedConsumer(jsap,"ALL_USERNAMES",{},false);
     //let pac= new PacModule(jsap);
+    pac.on("firstResults",(not:any)=>{
+        console.log("CLEAN BABY!!")
+    })
     pac.subscribeToSepa()
 }
 

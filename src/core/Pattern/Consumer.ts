@@ -23,7 +23,13 @@ var log = require("greglogs").default
  *     console.log(not)
  * })
  * ```
-
+ * The Consumer class implements the wrapper method "on", which can be used to write a cleaner code:
+ * ```
+ * consumer.on("firstResults",(not)=>{
+ *     console.log(not)
+ * })
+ * ``` 
+ *
  * Alternatively, a new Class that extends the Consumer can be created to implement a custom consumer:
  * ```
  * class MyConsumer extends Consumer{
@@ -62,6 +68,10 @@ export class Consumer extends PacModule{
     this.queryname=queryname;
     this.sub_bindings=sub_bindings;
     this.notificationEmitter=new EventEmitter();
+  }
+
+  public on(event:string,callback:Function):void{
+    this.getEmitter().on(event,callback)
   }
 
   public getEmitter():any{

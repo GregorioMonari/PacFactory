@@ -69,6 +69,12 @@ consumer.getEmitter().on("removedResults",(not)=>{
     console.log(not)
 })
 </pre>
+The Consumer class implements the wrapper method "on", which can be used to write a cleaner code:
+<pre>
+consumer.on("firstResults",(not)=>{
+    console.log(not)
+})
+</pre> 
 
 Alternatively, a new Class that extends the Consumer can be created to implement a custom consumer:
 <pre>

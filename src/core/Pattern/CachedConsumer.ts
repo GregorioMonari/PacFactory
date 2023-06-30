@@ -75,21 +75,23 @@ export class CachedConsumer extends Consumer{
         if(!this.ignore_first_results){
             log.trace("First results:",res);
             this.add_bindings_to_cache(res);
-            this.getEmitter().emit("firstResults",res)
             log.debug("Cache size: "+this.cache.size)
+            this.getEmitter().emit("firstResults",res)
+            
         }
     }
     onRemovedResults(res: BindingsResults):void{
         log.trace("Removed results:",res);
         this.remove_bindings_from_cache(res);
-        this.getEmitter().emit("removedResults",res)
         log.debug("Cache size: "+this.cache.size)
+        this.getEmitter().emit("removedResults",res)
+        
     }
     onAddedResults(res: BindingsResults):void{
         log.trace("Added results:",res);
         this.add_bindings_to_cache(res);
-        this.getEmitter().emit("addedResults",res)
         log.debug("Cache size: "+this.cache.size)
+        this.getEmitter().emit("addedResults",res)
     }
 
     public get cache(): Map<string|number,any>{

@@ -103,8 +103,10 @@ test('Cached Consumer', async ()=>{
 
     cache=consumer.cache;
 
+    consumer.stop()
+
     //expect(cache.size).toBe()  
 
-    consumer.stop()
+    
 
 })
