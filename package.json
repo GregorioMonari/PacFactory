@@ -1,7 +1,7 @@
 {
   "name": "pacfactory",
   "description": "A collection of semantic clients implementing the PAC architecture",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/GregorioMonari/PacFactory.git"
@@ -15,20 +15,18 @@
     "url": "https://github.com/GregorioMonari/PacFactory/issues"
   },
   "homepage": "https://github.com/GregorioMonari/PacFactory#readme",
-
-
-
-
   "main": "build/index.js",
-  "types":"build/index.d.ts",
+  "types": "build/index.d.ts",
   "scripts": {
-    "test": "node runPacApp TestMaster",
+    "test": "jest",
     "start:build": "tsc -w",
     "start:run": "nodemon build/pacfactory.js Mao -jsap ./resources/my2sec.jsap",
     "start": "concurrently npm:start:*"
   },
   "devDependencies": {
-    "@types/node": "^20.3.1"
+    "@types/node": "^20.3.1",
+    "jest": "^29.5.0",
+    "ts-jest": "^29.1.0"
   },
   "dependencies": {
     "@arces-wot/sepa-js": "^0.13.2",

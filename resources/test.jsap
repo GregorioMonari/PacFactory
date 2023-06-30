@@ -1,0 +1,131 @@
+{
+	"host": "localhost",
+	"oauth": {
+		"enable": false,
+		"register": "https://localhost:8443/oauth/register",
+		"tokenRequest": "https://localhost:8443/oauth/token"
+	},
+	"sparql11protocol": {
+		"protocol": "http",
+		"port": 8666,
+		"query": {
+			"path": "/query",
+			"method": "POST",
+			"format": "JSON"
+		},
+		"update": {
+			"path": "/update",
+			"method": "POST",
+			"format": "JSON"
+		}
+	},
+	"sparql11seprotocol": {
+		"protocol": "ws",
+		"availableProtocols": {
+			"ws": {
+				"port": 9666,
+				"path": "/subscribe"
+			},
+			"wss": {
+				"port": 443,
+				"path": "/subscribe"
+			}
+		}
+	},
+	"graphs": {
+		
+	},
+	"namespaces": {
+		"rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+		"rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+		"xsd": "http://www.w3.org/2001/XMLSchema#",
+		"owl": "http://www.w3.org/2002/07/owl#",
+		"time":"http://www.w3.org/2006/time#",
+		"my2sec": "http://www.vaimee.it/ontology/my2sec#"
+	},
+	"extended": {
+
+	},
+	"updates": {
+		"ADD_USER":{
+			"sparql":"INSERT DATA { GRAPH <http://www.vaimee.it/my2sec/members> { ?usergraph my2sec:username ?username_literal }}",
+			"forcedBindings": {
+				"usergraph": {
+					"type": "uri",
+					"value": "http://www.vaimee.it/my2sec/defuser@vaimee.it"
+				},
+				"username_literal": {
+					"type": "literal",
+					"value": "defuser"
+				}
+			}
+		},
+		"REMOVE_USER":{
+			"sparql":"DELETE {GRAPH <http://www.vaimee.it/my2sec/members> { ?usergraph ?p ?o }} WHERE { GRAPH <http://www.vaimee.it/my2sec/members> { ?usergraph ?p ?o }}",
+			"forcedBindings": {
+				"usergraph": {
+					"type": "uri",
+					"value": "http://www.vaimee.it/my2sec/defuser@vaimee.it"
+				}
+			}
+		},
+
+		
+		"SET_SYNCHRONIZATION_FLAG":{
+			"sparql":"INSERT {GRAPH <http://www.vaimee.it/my2sec/flags> {?flag rdf:type ?flag_type ; my2sec:hasMember ?usergraph ; time:inXSDDateTimeStamp ?now}} WHERE{BIND(now() as ?now) BIND(UUID() AS ?flag)}",
+			"forcedBindings": {
+				"flag_type": {
+					"type": "uri",
+					"value": "http://www.vaimee.it/my2sec/awproducerflag"
+				},
+				"usergraph": {
+					"type": "uri",
+					"value": "http://www.vaimee.it/my2sec/admin@vaimee.it"
+				}
+			}			
+		},
+		"RESET_SYNCHRONIZATION_FLAG":{
+			"sparql":"DELETE {GRAPH <http://www.vaimee.it/my2sec/flags> {?flag ?p ?o}} WHERE{GRAPH <http://www.vaimee.it/my2sec/flags> {?flag ?p ?o}}",
+			"forcedBindings": {
+				"flag": {
+					"type": "uri",
+					"value": "http://www.vaimee.it/my2sec/urn:id:1234"
+				}
+			}			
+		}
+	},
+
+
+	"queries": {
+		"ALL_USERNAMES": {
+			"sparql":"SELECT * WHERE { GRAPH <http://www.vaimee.it/my2sec/members> { ?s my2sec:username ?o }}"
+		},
+		"GET_SYNCHRONIZATION_FLAG":{
+			"sparql":"SELECT * WHERE {GRAPH <http://www.vaimee.it/my2sec/flags> {?flag rdf:type ?flag_type ; my2sec:hasMember ?usergraph ; time:inXSDDateTimeStamp ?timestamp}}",
+			"forcedBindings": {
+				"flag_type": {
+					"type": "uri",
+					"value": "http://www.vaimee.it/my2sec/production_finished_flag"
+				}
+			}
+		},
+
+		"GET_USER_SYNCHRONIZATION_FLAG":{
+			"sparql":"SELECT * WHERE {GRAPH <http://www.vaimee.it/my2sec/flags> {?flag rdf:type ?flag_type ; my2sec:hasMember ?usergraph ; time:inXSDDateTimeStamp ?timestamp}}",
+			"forcedBindings": {
+				"flag_type": {
+					"type": "uri",
+					"value": "http://www.vaimee.it/my2sec/production_finished_flag"
+				},
+				"usergraph": {
+					"type": "uri",
+					"value": "http://www.vaimee.it/my2sec/defuser@vaimee.it"
+				}
+			}
+		},
+		"GET_ALL_GRAPHS_COUNT":{
+			"sparql":"SELECT ?g (COUNT(?s) AS ?ntriples) WHERE {GRAPH ?g { ?s ?p ?o }}GROUP BY ?g"
+		}
+
+	}
+}
