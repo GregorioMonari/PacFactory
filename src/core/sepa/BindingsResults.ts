@@ -98,8 +98,10 @@ export class BindingsResults implements SepaBindingsResults{
         for(const binding of resultsArr){
             var parsedBinding:any={}
             for(const variable of this.getVars()){
-                const value=binding[variable].value
-                parsedBinding[variable]=value;
+                if(binding.hasOwnProperty(variable)){
+                    const value=binding[variable].value
+                    parsedBinding[variable]=value;
+                }
             }
             out.push(parsedBinding)
         }
