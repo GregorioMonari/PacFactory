@@ -1,7 +1,7 @@
 {
   "name": "pacfactory",
   "description": "A collection of semantic clients implementing the PAC architecture",
-  "version": "0.1.4",
+  "version": "0.1.6",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/GregorioMonari/PacFactory.git"
